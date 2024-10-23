@@ -1,0 +1,16 @@
+# online-data-capture.service
+
+[Unit]
+Description=Online Data Capture Service
+After=network.target
+
+[Service]
+ExecStartPre=/usr/bin/npm install
+ExecStart=/usr/bin/npm run dev
+WorkingDirectory=../bGames-Online-Data-Capture
+Environment=PORT=3005
+Restart=always
+User=1000
+
+[Install]
+WantedBy=multi-user.target

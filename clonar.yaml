@@ -1,0 +1,55 @@
+---
+- name: Ejecutar GitHub Actions y clonar repositorios privados
+  hosts: localhost
+  vars:
+    github_user: "NicolasZeladaK"
+    github_token: "git-key"
+    repositories:
+      - name: "bGames-API-GET"
+        repo_url: "github.com/NicolasZeladaK/bGames-API-GET.git"
+      - name: "bGames-API-Post"
+        repo_url: "github.com/NicolasZeladaK/bGames-API-Post.git"
+      - name: "bGames-Attribute-Display"
+        repo_url: "github.com/NicolasZeladaK/bGames-Attribute-Display.git"
+      - name: "bGames-Cloud-Desktop"
+        repo_url: "github.com/NicolasZeladaK/bGames-Cloud-Desktop.git"
+      - name: "bGames-Device-Data-Capture"
+        repo_url: "github.com/NicolasZeladaK/bGames-Device-Data-Capture.git"
+      - name: "bGames-Online-Data-Capture"
+        repo_url: "github.com/NicolasZeladaK/bGames-Online-Data-Capture.git"
+      - name: "bGames-Sensor-Management"
+        repo_url: "github.com/NicolasZeladaK/bGames-Sensor-Management.git"
+      - name: "bGames-Sensor-User-Communication"
+        repo_url: "github.com/NicolasZeladaK/bGames-Sensor-User-Communication.git"
+      - name: "bGames-Spend-Attribute"
+        repo_url: "github.com/NicolasZeladaK/bGames-Spend-Attribute.git"
+      - name: "bGames-Standard-Attribute"
+        repo_url: "github.com/NicolasZeladaK/bGames-Standard-Attribute.git"
+      - name: "bGames-User-Management"
+        repo_url: "github.com/NicolasZeladaK/bGames-User-Management.git"
+      - name: "bGames-Website"
+        repo_url: "github.com/NicolasZeladaK/bGames-Website.git"
+
+  tasks:
+    - name: Crear carpetas en la ubicación del archivo Ansible
+      file:
+        path: "{{ playbook_dir }}/../{{ item.name }}"
+        state: directory
+      loop: "{{ repositories }}"
+
+    - name: Clonar repositorios privados
+      git:
+        repo: "https://{{ github_user }}:{{ github_token }}@{{ item.repo_url }}"
+        dest: "{{ playbook_dir }}/../{{ item.name }}"
+      loop: "{{ repositories }}"
+
+    - name: Crear archivo .env en cada carpeta
+      copy:
+        content: |
+          DB_HOST=localhost
+          DB_PORT=3306
+          DB_USER=root
+          DB_PASSWORD=password
+          DB_DATABASE=bgames
+        dest: "{{ playbook_dir }}/../{{ item.name }}/.env"
+      loop: "{{ repositories }}"

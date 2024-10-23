@@ -1,0 +1,16 @@
+# cloud-desktop.service
+
+[Unit]
+Description=Cloud Desktop Service
+After=network.target
+
+[Service]
+ExecStartPre=/usr/bin/npm install
+ExecStart=/usr/bin/npm run dev
+WorkingDirectory=../bGames-Cloud-Desktop
+Environment=PORT=3004
+Restart=always
+User=1000
+
+[Install]
+WantedBy=multi-user.target

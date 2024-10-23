@@ -1,0 +1,16 @@
+# sensor-management.service
+
+[Unit]
+Description=Sensor Management Service
+After=network.target
+
+[Service]
+ExecStartPre=/usr/bin/npm install
+ExecStart=/usr/bin/npm run dev
+WorkingDirectory=../bGames-Sensor-Management
+Environment=PORT=3007
+Restart=always
+User=1000
+
+[Install]
+WantedBy=multi-user.target

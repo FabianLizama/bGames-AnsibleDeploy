@@ -1,0 +1,16 @@
+# standard-attribute.service
+
+[Unit]
+Description=Standard Attribute Service
+After=network.target
+
+[Service]
+ExecStartPre=/usr/bin/npm install
+ExecStart=/usr/bin/npm run dev
+WorkingDirectory=../bGames-Standard-Attribute
+Environment=PORT=3009
+Restart=always
+User=1000
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,16 @@
+# attribute-display.service
+
+[Unit]
+Description=Attribute Display Service
+After=network.target
+
+[Service]
+ExecStartPre=/usr/bin/npm install
+ExecStart=/usr/bin/npm run dev
+WorkingDirectory=../bGames-Attribute-Display
+Environment=PORT=3003
+Restart=always
+User=1000
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,58 @@
+# despliegue.yaml
+---
+- name: Despliegue de Microservicios Modulo Cloud
+  hosts: IPS
+  become: true
+  gather_facts: false
+  connection: local
+
+  tasks:
+    - name: Instalar dependencias de todos los servicios
+      block:
+        - name: Instalar dependencias
+          command: npm install
+          args:
+            chdir: "{{ item.cwd }}"
+          loop:
+            - { cwd: "../bGames-API-GET" }
+            - { cwd: "../bGames-API-Post" }
+            - { cwd: "../bGames-Attribute-Display" }
+            - { cwd: "../bGames-Cloud-Desktop" }
+            - { cwd: "../bGames-Online-Data-Capture" }
+            - { cwd: "../bGames-Sensor-User-Communication" }
+            - { cwd: "../bGames-Sensor-Management" }
+            - { cwd: "../bGames-Spend-Attribute" }
+            - { cwd: "../bGames-Standard-Attribute" }
+            - { cwd: "../bGames-User-Management" }
+            - { cwd: "../bGames-Device-Data-Capture" }
+            - { cwd: "../bGames-Website" }
+
+    - name: Iniciar servicios (Excepto Website)
+      command: "nohup npm run dev > {{ item.log_file }} 2>&1 &"
+      args:
+        chdir: "{{ item.cwd }}"
+      environment:
+        PORT: "{{ item.port }}"
+      async: 90000
+      poll: 0
+      loop:
+        - { cwd: "../bGames-API-GET", port: 3001, log_file: "api-get.log" }
+        - { cwd: "../bGames-API-Post", port: 3002, log_file: "api-post.log" }
+        - { cwd: "../bGames-Attribute-Display", port: 3003, log_file: "attribute-display.log" }
+        - { cwd: "../bGames-Cloud-Desktop", port: 3004, log_file: "cloud-desktop.log" }
+        - { cwd: "../bGames-Online-Data-Capture", port: 3005, log_file: "online-data-capture.log" }
+        - { cwd: "../bGames-Sensor-User-Communication", port: 3006, log_file: "sensor-user-communication.log" }
+        - { cwd: "../bGames-Sensor-Management", port: 3007, log_file: "sensor-management.log" }
+        - { cwd: "../bGames-Spend-Attribute", port: 3008, log_file: "spend-attribute.log" }
+        - { cwd: "../bGames-Standard-Attribute", port: 3009, log_file: "standard-attribute.log" }
+        - { cwd: "../bGames-User-Management", port: 3010, log_file: "user-management.log" }
+        - { cwd: "../bGames-Device-Data-Capture", port: 3011, log_file: "device-data-capture.log" }
+
+    - name: Iniciar servicio Website
+      command: "nohup npm run serve > ../bGames-Website/website.log 2>&1 &"
+      args:
+        chdir: "../bGames-Website"
+      environment:
+        PORT: 8080
+      async: 90000
+      poll: 0

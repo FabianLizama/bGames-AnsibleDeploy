@@ -1,0 +1,16 @@
+# api-post.service
+
+[Unit]
+Description=API-Post Service
+After=network.target
+
+[Service]
+ExecStartPre=/usr/bin/npm install
+ExecStart=/usr/bin/npm run dev
+WorkingDirectory=../bGames-API-Post
+Environment=PORT=3002
+Restart=always
+User=1000
+
+[Install]
+WantedBy=multi-user.target

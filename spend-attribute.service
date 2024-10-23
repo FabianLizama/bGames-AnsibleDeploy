@@ -1,0 +1,16 @@
+# spend-attribute.service
+
+[Unit]
+Description=Spend Attribute Service
+After=network.target
+
+[Service]
+ExecStartPre=/usr/bin/npm install
+ExecStart=/usr/bin/npm run dev
+WorkingDirectory=../bGames-Spend-Attribute
+Environment=PORT=3008
+Restart=always
+User=1000
+
+[Install]
+WantedBy=multi-user.target
